@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import Account from '../models/Account';
+import AccountsController from './AccountsController';
 
 export default {
     async create(request: Request, response: Response) {
@@ -89,7 +90,7 @@ export default {
                 }
                 
             } else {
-                return response.json({
+                return response.status(204).json({
                     message: 'Conta bancária não encontrada.'
                 });
             }
@@ -103,6 +104,8 @@ export default {
     },
 
     async withdraw(request: Request, response: Response){
+        let cedulas;
+
         const { id } = request.params;
 
         const { saque, accountType } = request.body;
@@ -118,7 +121,7 @@ export default {
         if(saque > 0){
             const account = await accountsRepository.findOne({ where: { id, accountType } });
 
-            if(account !== undefined){
+            if(account != undefined){
                 if(!account.inOperation){
                     await accountsRepository.update(id, {
                         inOperation: true
@@ -128,8 +131,26 @@ export default {
                         });
                     });
 
+                    if(account.balance < saque){
+                        return response.json({
+                            message: 'Valor indisponível na conta selecionada.'
+                        });
+                    }
+
+                    await AccountsController.calculaCedulas(saque).then((retorno) => {
+
+                        if(retorno != 0){
+                            cedulas = retorno;
+                        } else {
+                            return response.json({
+                                message: 'Valor informado não possui cedulas correspondentes para transação'
+                            });
+                        }
+                        
+                    });
+
                     await new Promise(resolve => setTimeout(resolve, 5000));
-    
+
                     await accountsRepository.update(id, {
                         balance: account.balance - saque
                     }).catch(err => {
@@ -147,7 +168,8 @@ export default {
                     });
 
                     return response.json({
-                        message: 'Saque efetuado com sucesso.'
+                        message: 'Saque efetuado com sucesso.',
+                        cedulas: cedulas
                     });
                 } else {
                     return response.json({
@@ -156,7 +178,7 @@ export default {
                 }
                 
             } else {
-                return response.json({
+                return response.status(204).json({
                     message: 'Conta bancária não encontrada.'
                 });
             }
@@ -174,7 +196,33 @@ export default {
 
         const account = await accountRepository.find();
 
-        return response.json(account);
+        return response.status(200).json(account);
 
-    }
+    },
+
+    async calculaCedulas(valor: Number) {
+        let cedulas = {
+            cem: 0,
+            cinquenta: 0,
+            vinte: 0
+        };
+
+        let valorFinal = valor.valueOf();
+        while(valorFinal != 0){
+            if(valorFinal >= 100){
+                cedulas.cem = Math.trunc(valorFinal / 100);
+                valorFinal = valorFinal % 100;
+            } else if(valorFinal >= 50){
+                cedulas.cinquenta = Math.trunc(valorFinal / 50);
+                valorFinal = valorFinal % 50;
+            } else if(valorFinal >= 20){
+                cedulas.vinte = Math.trunc(valorFinal / 20);
+                valorFinal = valorFinal % 20;
+            } else {
+                return 0;
+            }
+        }
+
+        return cedulas;
+    },
 }

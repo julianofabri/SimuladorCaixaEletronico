@@ -7,10 +7,16 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "test": "mocha test --exit"
   },
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "express": "^4.17.1",
+    "mocha": "^8.2.1",
+    "request": "^2.88.2",
+    "should": "^13.2.3",
     "sqlite3": "^5.0.0",
     "typeorm": "^0.2.29"
   },

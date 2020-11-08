@@ -27,7 +27,7 @@ O intuito do projeto é desenvolver uma API que simule um Caixa Eletrônico e se
 
 #### O que é esperado neste teste?
 
-- [ ] Testes automatizados de alguns fluxos
+- [x] Testes automatizados de alguns fluxos
 - [x] Uso de banco de dados
 - [x] Uso dos padrões de API RESTful (verbos, endpoints, status code, etc)
 - [x] Documentação de como executar a aplicação
@@ -48,7 +48,7 @@ POST /user
 {
 	"name": "Juliano",
 	"birthDate": "1996-02-14",
-	"CPF": "12345678904",
+	"CPF": "12345678900",
 	"isActive": true,
 	"newAccounts": [
 		{
@@ -68,7 +68,7 @@ HTTP/1.1 201 Created
     "user": {
     "name": "Juliano",
     "birthDate": "1996-02-14",
-    "CPF": "12345678904",
+    "CPF": "12345678900",
     "isActive": true,
     "newAccounts": [
       {
@@ -90,6 +90,92 @@ HTTP/1.1 201 Created
 | isActive      | Indica se o usuário está ativo.                                        |
 | newAccounts   | Opcional. Objeto contendo (Tipo de conta, saldo e se está ativa). Caso queira cadastrar o usuário já com uma conta bancária.   |
 
+___
+Listar Todos Usuarios:
+```
+GET /user
+```
+
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+[
+  {
+    "name": "Juliano",
+    "birthDate": "1996-02-14",
+    "CPF": "12345678900",
+    "isActive": true,
+  },
+  {
+    "name": "Rodrigo",
+    "birthDate": "1995-01-15",
+    "CPF": "12345678901",
+    "isActive": true,
+  }
+]
+```
+___
+Lista Usuario:
+```
+GET /user/:idUser
+```
+
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+[
+  {
+    "name": "Rodrigo",
+    "birthDate": "1995-01-15",
+    "CPF": "12345678901",
+    "isActive": true,
+  }
+]
+```
+___
+Edita Usuario:
+```
+PUT /user/:idUser
+```
+* Request
+```json {.line-numbers}
+{
+	"name": "Juliano",
+	"birthDate": "1996-02-14",
+	"CPF": "12345678900",
+	"isActive": true,
+}
+```
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+{
+  "message": "Usuário alterado com sucesso."
+}
+```
+| Fields        | Description                                                            |
+|:------------- |:-------------                                                          |
+| name          | Nome do usuário a ser editado.                                      |
+| birthDate     | Data de nascimento do usuário.                                         |
+| CPF           | CPF do usuário.                                           |
+| isActive      | Indica se o usuário está ativo.                                        |
+___
+Deleta Usuario (deleta logicamente mudando o field isActive para false):
+```
+DELETE /user/:idUser
+```
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+{
+  "message": "Usuário excluído com sucesso."
+}
+```
+___
 #### Contas Bancárias
 
 ##### Rotas
@@ -127,3 +213,58 @@ HTTP/1.1 201 Created
 | accountType   | Tipo da conta cadastrada (1 - Conta Corrente, 2 - Conta Poupança.      |
 | balance       | Saldo da conta.                                                        |
 | isActive      | Indica se a conta está ativa.                                          |
+
+___
+#### Transações
+
+##### Rotas
+Depósito:
+```
+PUT /deposit/:idAccount
+```
+* Request
+```json {.line-numbers}
+{
+	"deposito": 500
+}
+```
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+{
+  "message": "Depósito efetuado com sucesso."
+}
+```
+| Fields        | Description              |
+|:------------- |:-------------            |
+| deposito      | Valor a ser depositado na conta bancária.  |
+___
+Saque:
+```
+PUT /withdraw/:idAccount
+```
+* Request
+```json {.line-numbers}
+{
+	"saque": 290,
+	"accountType": 2
+}
+```
+* Response
+```json {.line-numbers}
+HTTP/1.1 200 OK
+
+{
+  "message": "Saque efetuado com sucesso.",
+  "cedulas": {
+    "cem": 2,
+    "cinquenta": 1,
+    "vinte": 2
+  }
+}
+```
+| Fields        | Description              |
+|:------------- |:-------------            |
+| saque         | Valor a ser sacado da conta bancária.  |
+| cedulas       | Mostra as cedulas que seram sacadas e a quantas de cada cedula.  |

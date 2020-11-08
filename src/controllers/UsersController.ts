@@ -58,7 +58,7 @@ export default {
         const user = await usersRepository.findOne({ where: { id } });
 
         if(user == undefined){
-            return response.json({
+            return response.status(204).json({
                 message: 'Usuário não encontrado.'
             });
         }
@@ -77,21 +77,30 @@ export default {
         } = request.body;
 
         const usersRepository = getRepository(User);
-        
-        await usersRepository.update(id, {
-            name,
-            birthDate,
-            CPF,
-            isActive
-        }).catch(err => {
-            return response.json({
-                message: err
-            });
-        });
 
-        return response.json({
-            message: 'Usuário alterado com sucesso.'
-        });
+        const user = await usersRepository.findOne({ where: { id: id.id } });
+
+        if(user != undefined){
+            await usersRepository.update(id, {
+                name,
+                birthDate,
+                CPF,
+                isActive
+            }).catch(err => {
+                return response.json({
+                    message: err
+                });
+            });
+    
+            return response.json({
+                message: 'Usuário alterado com sucesso.'
+            });
+        } else {
+            return response.json({
+                message: 'Usuário não encontrado.'
+            });
+        }
+        
     },
 
     async listUsers(request: Request, response: Response){
