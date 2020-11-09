@@ -34,12 +34,70 @@ O intuito do projeto é desenvolver uma API que simule um Caixa Eletrônico e se
 - [x] Documentação de como usar os endpoints
 - [x] Uso de git, o código poderá estar no Github ou Bitbucket
 
+___
+### Como rodar o projeto
+
+Com o projeto devidamente clonado acesse a pasta e rode
+```properties
+yarn install
+#OR
+npm install
+```
+
+Feito isso basta rodar o comando
+```properties
+yarn dev
+#OR
+npm run dev
+```
+
+###### (dev é o comando configurado para rodar os comandos necessários)
+___
+### Testes Unitários
+
+Para realizar os testes implementados é necessário que a aplicação tenha sido recém clonada, ou seja, o banco deve estar **zerado**.
+
+Caso não tenha realizado dessa forma é muito simples, basta rodar o comando para que as tabelas sejam "dropadas"
+```properties
+yarn typeorm schema:drop
+```
+
+Depois rode o comando a seguir para recriar as tabelas
+```properties
+yarn typeorm migration:run
+```
+
+Para rodar os testes basta executar o comando
+```properties
+yarn test
+```
+
+Todos os testes implementados estão na pasta **/src/test**.
+
+___
+#MENU
+- Usuario
+  - [Cadastrar Usuário](#cadastrar-usuario)
+  - [Listar Todos Usuários](#listar-todos-usuarios)
+  - [Lista Usuário](#lista-usuario)
+  - [Edita Usuário](#edita-usuario)
+  - [Deleta Usuário](#deleta-usuario)
+  <br>
+- Contas Bancarias
+  - [Cadastrar Conta Bancária](#cadastrar-conta-bancária)
+  <br>
+
+- Transações
+  - [Deposito](#deposito)
+  - [Saque](#saque)
+___
+
 ## Rotas Implementadas
 
-#### Usuários
+### Usuários
 
-##### Rotas
-Cadastrar Usuario:
+#### Rotas
+##### Cadastrar Usuario:
 ```
 POST /user
 ```
@@ -91,7 +149,7 @@ HTTP/1.1 201 Created
 | newAccounts   | Opcional. Objeto contendo (Tipo de conta, saldo e se está ativa). Caso queira cadastrar o usuário já com uma conta bancária.   |
 
 ___
-Listar Todos Usuarios:
+##### Listar Todos Usuarios:
 ```
 GET /user
 ```
@@ -116,7 +174,7 @@ HTTP/1.1 200 OK
 ]
 ```
 ___
-Lista Usuario:
+##### Lista Usuario:
 ```
 GET /user/:idUser
 ```
@@ -135,7 +193,7 @@ HTTP/1.1 200 OK
 ]
 ```
 ___
-Edita Usuario:
+##### Edita Usuario:
 ```
 PUT /user/:idUser
 ```
@@ -163,7 +221,8 @@ HTTP/1.1 200 OK
 | CPF           | CPF do usuário.                                           |
 | isActive      | Indica se o usuário está ativo.                                        |
 ___
-Deleta Usuario (deleta logicamente mudando o field isActive para false):
+##### Deleta Usuario:
+###### (deleta logicamente mudando o field isActive para false):
 ```
 DELETE /user/:idUser
 ```
@@ -176,10 +235,10 @@ HTTP/1.1 200 OK
 }
 ```
 ___
-#### Contas Bancárias
+### Contas Bancárias
 
-##### Rotas
-Cadastrar Conta Bancária:
+#### Rotas
+##### Cadastrar Conta Bancária
 ```
 POST /account
 ```
@@ -215,10 +274,10 @@ HTTP/1.1 201 Created
 | isActive      | Indica se a conta está ativa.                                          |
 
 ___
-#### Transações
+### Transações
 
-##### Rotas
-Depósito:
+#### Rotas
+##### Deposito
 ```
 PUT /deposit/:idAccount
 ```
@@ -240,7 +299,7 @@ HTTP/1.1 200 OK
 |:------------- |:-------------            |
 | deposito      | Valor a ser depositado na conta bancária.  |
 ___
-Saque:
+##### Saque
 ```
 PUT /withdraw/:idAccount
 ```
