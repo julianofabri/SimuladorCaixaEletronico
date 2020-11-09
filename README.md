@@ -335,4 +335,4 @@ HTTP/1.1 200 OK
 | Fields        | Description              |
 |:------------- |:-------------            |
 | saque         | Valor a ser sacado da conta bancária.  |
-| cedulas       | Mostra as cedulas que seram sacadas e a quantas de cada cedula.  |
+| cedulas       | Mostra as cedulas que serão sacadas e quantas de cada cedula.  |
