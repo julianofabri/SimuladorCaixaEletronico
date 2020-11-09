@@ -44,6 +44,11 @@ yarn install
 npm install
 ```
 
+Rode as migrations para criar o banco de dados
+```properties
+yarn typeorm migration:run
+```
+
 Feito isso basta rodar o comando
 ```properties
 yarn dev
