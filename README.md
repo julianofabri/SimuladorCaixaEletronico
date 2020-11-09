@@ -84,7 +84,7 @@ yarn test
 Todos os testes implementados estão na pasta **/src/test**.
 
 ___
-#MENU
+# MENU
 - Usuario
   - [Cadastrar Usuário](#cadastrar-usuario)
   - [Listar Todos Usuários](#listar-todos-usuarios)
