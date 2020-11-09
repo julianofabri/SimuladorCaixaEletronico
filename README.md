@@ -46,8 +46,10 @@ npm install
 
 Rode as migrations para criar o banco de dados
 ```properties
+yarn typeorm schema:drop
 yarn typeorm migration:run
 #OR
+npm run typeorm schema:drop
 npm run typeorm migration:run
 ```
 
